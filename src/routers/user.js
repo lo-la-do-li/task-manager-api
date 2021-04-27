@@ -11,6 +11,11 @@ const router = new express.Router();
 
 // USER API ENDPOINTS ------------------------------------
 
+// TEST ENDPOINT
+router.get('/', (req, res) => {
+	res.send(JSON.stringify('You connected to the task-manager API!'));
+});
+
 // CREATE USER
 router.post('/users', async (req, res) => {
 	const user = new User(req.body);
