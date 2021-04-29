@@ -24,6 +24,7 @@ router.post('/users', async (req, res) => {
 		await user.save();
 		sendWelcomeEmail(user.email, user.name);
 		const token = await user.generateAuthToken();
+		res.cookie('auth_token', token);
 		res.status(201).send({ user, token });
 	} catch (e) {
 		res.status(400).send(e);
@@ -38,6 +39,7 @@ router.post('/users/login', async (req, res) => {
 			req.body.password
 		);
 		const token = await user.generateAuthToken();
+		res.cookie('auth_token', token);
 		res.send({ user, token });
 	} catch (e) {
 		res.status(400).send();
@@ -54,7 +56,7 @@ router.post('/users/logout', auth, async (req, res) => {
 
 		res.send();
 	} catch (e) {
-		res.status(500).send();
+		res.status(500).send(e);
 	}
 });
 
