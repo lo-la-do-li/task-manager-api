@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const Task = require('./task');
 
 const userSchema = new mongoose.Schema(
 	{
@@ -35,15 +34,6 @@ const userSchema = new mongoose.Schema(
 				}
 			},
 		},
-		age: {
-			type: Number,
-			default: 0,
-			validate(value) {
-				if (value < 0) {
-					throw new Error('Age must be a positive number');
-				}
-			},
-		},
 		avatar: {
 			type: Buffer, // Stores Buffer with binary img data in db to spec. user
 		},
@@ -61,16 +51,9 @@ const userSchema = new mongoose.Schema(
 	}
 );
 
-// Reference to tasks (a virtual relationship, not stored in database)
+// INSTANCE METHODS
 
-userSchema.virtual('tasks', {
-	ref: 'Task',
-	localField: '_id',
-	foreignField: 'owner',
-});
-
-// Instance methods
-
+// Hides specified fields from JSON data response
 userSchema.methods.toJSON = function () {
 	const user = this;
 	const userObject = user.toObject();
@@ -91,22 +74,23 @@ userSchema.methods.generateAuthToken = async function () {
 	return token;
 };
 
-// Model methods
+// MODEL METHODS
+
 userSchema.statics.findByCredentials = async (email, password) => {
 	const user = await User.findOne({ email });
 
 	if (!user) {
-		throw new Error('Unable to login');
+		throw new Error(JSON.stringify('This email has not been registered.'));
 	}
 	const isMatch = await bcrypt.compare(password, user.password);
 
 	if (!isMatch) {
-		throw new Error('Unable to login');
+		throw new Error(JSON.stringify('Incorrect password. Try again.'));
 	}
 	return user;
 };
 
-// Hash the plain text password before saving
+// Hash plain text password before saving
 userSchema.pre('save', async function (next) {
 	const user = this;
 
@@ -114,14 +98,6 @@ userSchema.pre('save', async function (next) {
 		user.password = await bcrypt.hash(user.password, 8);
 	}
 
-	next();
-});
-
-// Delete user tasks when user is removed
-
-userSchema.pre('remove', async function (next) {
-	const user = this;
-	await Task.deleteMany({ owner: user._id });
 	next();
 });
 

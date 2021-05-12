@@ -22,9 +22,9 @@ router.post('/users', async (req, res) => {
 
 	try {
 		await user.save();
-		sendWelcomeEmail(user.email, user.name);
+		// sendWelcomeEmail(user.email, user.name);
 		const token = await user.generateAuthToken();
-		res.cookie('auth_token', token);
+		// res.cookie('auth_token', token);
 		res.status(201).send({ user, token });
 	} catch (e) {
 		res.status(400).send(e);
@@ -39,10 +39,10 @@ router.post('/users/login', async (req, res) => {
 			req.body.password
 		);
 		const token = await user.generateAuthToken();
-		res.cookie('auth_token', token);
+		// res.cookie('auth_token', token);
 		res.send({ user, token });
 	} catch (e) {
-		res.status(400).send();
+		res.status(400).send(e.message);
 	}
 });
 
@@ -53,7 +53,7 @@ router.post('/users/logout', auth, async (req, res) => {
 			(token) => token.token !== req.token
 		);
 		await req.user.save();
-
+		// res.clearCookie(token);
 		res.send();
 	} catch (e) {
 		res.status(500).send(e);
@@ -104,7 +104,7 @@ router.patch('/users/me', auth, async (req, res) => {
 router.delete('/users/me', auth, async (req, res) => {
 	try {
 		await req.user.remove();
-		sendCancellationEmail(req.user.email, req.user.name);
+		// sendCancellationEmail(req.user.email, req.user.name);
 		res.send(req.user);
 	} catch (e) {
 		res.status(500).send(e);
