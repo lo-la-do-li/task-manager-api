@@ -54,7 +54,7 @@ router.post('/users/logout', auth, async (req, res) => {
 		);
 		await req.user.save();
 		// res.clearCookie(token);
-		res.send();
+		res.status(200).send(JSON.stringify('You have successfully logged out'));
 	} catch (e) {
 		res.status(500).send(e);
 	}
@@ -119,7 +119,7 @@ const upload = multer({
 	},
 	fileFilter(req, file, cb) {
 		if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-			return cb(new Error('Please upload an image'));
+			return cb(new Error("Please upload an image"));
 		}
 		cb(undefined, true);
 	},
@@ -136,10 +136,10 @@ router.post(
 			.toBuffer();
 		req.user.avatar = buffer;
 		await req.user.save();
-		res.send();
+		res.send('Image uploaded');
 	},
 	(error, req, res, next) => {
-		res.status(400).send({ error: error.message });
+		res.status(400).send(JSON.stringify(error.message));
 	}
 );
 
@@ -162,6 +162,7 @@ router.get('/users/:id/avatar', async (req, res) => {
 		}
 
 		res.set('Content-Type', 'image/png');
+    
 		res.send(user.avatar);
 	} catch (e) {
 		res.status(404).send();

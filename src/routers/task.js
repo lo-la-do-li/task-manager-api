@@ -27,7 +27,6 @@ router.post('/tasks', auth, async (req, res) => {
 // Sorting: GET /tasks/sortBy=createdAt:desc  (or asc)
 
 router.get('/tasks', auth, async (req, res) => {
-	// ATEMPT 1:
 	const match = {};
 	const sort = {};
 	if (req.query.completed) {
