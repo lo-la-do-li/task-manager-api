@@ -12,10 +12,18 @@ const router = new express.Router();
 // USER API ENDPOINTS ------------------------------------
 
 // TEST ENDPOINT
+// router.get('/', (req, res) => {
+// 	res.status(200).send(JSON.stringify('You connected to the task-manager API!'));
+// });
 router.get('/', (req, res) => {
-	res.send(JSON.stringify('You connected to the task-manager API!'));
+	try {
+		res.send(
+			JSON.stringify('You connected to the Task App API!')
+		);
+	} catch (e) {
+		res.status(500).send(e);
+	}
 });
-
 // CREATE USER
 router.post('/users', async (req, res) => {
 	const user = new User(req.body);
@@ -158,14 +166,14 @@ router.get('/users/:id/avatar', async (req, res) => {
 		const user = await User.findById(req.params.id);
 
 		if (!user || !user.avatar) {
-			throw new Error();
+			throw new Error("User has not uploaded an image");
 		}
 
 		res.set('Content-Type', 'image/png');
     
 		res.send(user.avatar);
 	} catch (e) {
-		res.status(404).send();
+		res.status(404).send({error: e.message});
 	}
 });
 
