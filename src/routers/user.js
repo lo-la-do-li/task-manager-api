@@ -12,9 +12,7 @@ const router = new express.Router();
 // USER API ENDPOINTS ------------------------------------
 
 // TEST ENDPOINT
-// router.get('/', (req, res) => {
-// 	res.status(200).send(JSON.stringify('You connected to the task-manager API!'));
-// });
+
 router.get('/', (req, res) => {
 	try {
 		res.send(
@@ -173,6 +171,7 @@ router.get('/users/:id/avatar', async (req, res) => {
     
 		res.send(user.avatar);
 	} catch (e) {
+    
 		res.status(404).send({error: e.message});
 	}
 });
