@@ -9,7 +9,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(cors());
-app.options('*', cors());
+// app.options('*', cors());
 app.use(express.json());
 app.use(userRouter);
 app.use(taskRouter);
