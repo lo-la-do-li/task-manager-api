@@ -1,6 +1,6 @@
 const express = require('express');
 require('./db/mongoose');
-// const cors = require('cors');
+const cors = require('cors');
 // const cookieParser = require('cookie-parser');
 const userRouter = require('./routers/user');
 const taskRouter = require('./routers/task');
@@ -8,8 +8,8 @@ const taskRouter = require('./routers/task');
 const app = express();
 const port = process.env.PORT;
 
-// app.use(cors());
-// app.options('*', cors());
+app.use(cors());
+app.options('*', cors());
 app.use(express.json());
 app.use(userRouter);
 app.use(taskRouter);
