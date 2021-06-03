@@ -7,7 +7,7 @@ const sendWelcomeEmail = (email, name) => {
 		to: email,
 		from: 'lola@em2867.task-app-by-lola.com',
 		subject: 'Thanks for joining in!',
-		text: `Welcome to the my Task App, ${name}. Let me know how it goes!`,
+		text: `Welcome to my Task App, ${name}. Let me know how it goes!`,
 	});
 };
 
